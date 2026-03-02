@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html>
+
+<script>
+  window.MathJax = {
+    tex: {
+      inlineMath: [['\\(','\\)']],
+      displayMath: [['$$','$$']]
+    },
+    svg: { fontCache: 'global' }
+  };
+  </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js"></script>
+  
+<head>
+  <meta charset="utf-8">
+
+  <meta name="description" content="DESCRIPTION META TAG">
+  <meta property="og:title" content="SOCIAL MEDIA TITLE TAG"/>
+  <meta property="og:description" content="SOCIAL MEDIA DESCRIPTION TAG TAG"/>
+  <meta property="og:url" content="URL OF THE WEBSITE"/>
+
+  <meta property="og:image" content="static/image/your_banner_image.png" />
+  <meta property="og:image:width" content="1200"/>
+  <meta property="og:image:height" content="630"/>
+
+
+  <meta name="twitter:title" content="TWITTER BANNER TITLE META TAG">
+  <meta name="twitter:description" content="TWITTER BANNER DESCRIPTION META TAG">
+
+  <meta name="twitter:image" content="static/images/your_twitter_banner_image.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <!-- Keywords for your paper to be indexed by-->
+  <meta name="keywords" content="KEYWORDS SHOULD BE PLACED HERE">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+  <title>STAvatar</title>
+
+  <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro"
+        rel="stylesheet">
+
+  <link rel="stylesheet" href="static/css/bulma.min.css">
+  <link rel="stylesheet" href="static/css/bulma-carousel.min.css">
+  <link rel="stylesheet" href="static/css/bulma-slider.min.css">
+  <link rel="stylesheet" href="static/css/fontawesome.all.min.css">
+  <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+  <link rel="stylesheet" href="static/css/index.css">
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://documentcloud.adobe.com/view-sdk/main.js"></script>
+  <script defer src="static/js/fontawesome.all.min.js"></script>
+  <script src="static/js/bulma-carousel.min.js"></script>
+  <script src="static/js/bulma-slider.min.js"></script>
+  <script src="static/js/index.js"></script>
+  <style>
+    /*.video-player {*/
+    /*  height: 220px; !* 固定高度 *!*/
+    /*  width: auto;   !* 自动宽度以维持纵横比 *!*/
+    /*  margin: 10px;  !* 可选的边距 *!*/
+    /*}*/
+    /*.video-slider video {*/
+    /*  width: 23%;*/
+    /*}*/
+    /* 保证容器内的项目居中排列 */
+    .video-slider {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+  </style>
+</head>
+<body>
+
+
+<section class="hero">
+  <div class="hero-body">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered">
+        <div class="column has-text-centered">
+          <h1 class="title is-1 publication-title">STAvatar: Soft Binding and Temporal Density Control for Monocular 3D Head Avatars Reconstruction</h1>
+          <div class="is-size-5 publication-authors">
+              <span class="author-block">
+               Jiankuo Zhao<sup>1,2</sup>,
+              </span>
+            <span class="author-block">
+                <a href="https://xiangyuzhu-open.github.io/homepage/">Xiangyu Zhu</a><sup>1,2</sup>,</span>
+            <span class="author-block">
+                Zidu Wang<sup>1,2</sup>,
+              </span>
+            <span class="author-block">
+                <a href="https://scholar.google.cz/citations?hl=zh-CN&user=cuJ3QG8AAAAJ">Zhen Lei</a><sup>1,2,3</sup>
+              </span>
+          </div>
+
+          <div class="is-size-5 publication-authors">
+            <span class="author-block"><sup>1</sup>MAIS, Institute of Automation, Chinese Academy of Sciences </span><br>
+            <span class="author-block"><sup>2</sup>School of Artificial Intelligence, University of Chinese Academy of Sciences </span>
+            <span class="author-block"><sup>3</sup>CAIR, HKISI, Chinese Academy of Sciences </span>
+          </div>
+
+          <div class="is-size-5 publication-authors" style="margin-top: 10px;">
+            <span style="
+              font-size: 1.4rem; 
+              color: #1168c0;
+              font-weight: 700; 
+              letter-spacing: 0.5px;
+              border-top: 1px solid #dcdde1;
+              border-bottom: 1px solid #dcdde1;
+              padding: 5px 15px;
+              display: inline-block;
+            ">
+              CVPR 2026
+            </span>
+          </div>
+
+          <div class="column has-text-centered">
+            <div class="publication-links">
+              <!-- PDF Link. -->
+              <span class="link-block">
+                  <a href="https://arxiv.org/abs/2511.19854" 
+                     class="external-link button is-normal is-rounded is-dark">
+                    <span class="icon">
+                        <i class="fas fa-file-pdf"></i>
+                    </span>
+                    <span>Paper</span>
+                  </a>
+              </span>
+
+              <span class="link-block">
+                  <a href="https://github.com/LCFAW/STAvatar" 
+                    class="external-link button is-normal is-rounded is-dark">
+                    <span class="icon">
+                        <i class="fab fa-github"></i>
+                    </span>
+                    <span>Code</span>
+                    </a>
+                </span>
+              </a>
+
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="hero teaser">
+  <div class="container is-max-desktop">
+    <div class="hero-body">
+      <video class="video-player" id="tree2" controls
+             style="width: 100%; height: auto;">
+        <source src="static/video/Video_v2_S.mp4" type="video/mp4">
+      </video>
+    </div>
+  </div>
+</section>
+
+<!-- Paper abstract -->
+<section class="hero is-small">
+  <div class="hero-body">
+    <div class="container is-max-desktop">
+      <h3 class="title is-3">Abstract</h3>
+
+      <div style="display: flex; justify-content: center; align-items: center; margin-bottom: 1.2em;">
+        <img src="static\images\brief.png" alt="MY ALT TEXT" style="width: 85%; height: auto;"/>
+      </div>
+
+      <div class="content has-text-justified">
+        <p style="font-size: 1.0em;">
+          Reconstructing high-fidelity and animatable 3D head avatars from monocular videos remains a challenging yet essential task. 
+          Existing methods based on 3D Gaussian Splatting typically bind Gaussians to mesh triangles and model deformations solely via Linear Blend Skinning, 
+          which results in rigid motion and limited expressiveness. Moreover, they lack specialized strategies to handle frequently occluded regions (e.g., mouth interiors, eyelids). 
+          To address these limitations, we propose STAvatar, which consists of two key components: 
+          (1) a UV-Adaptive Soft Binding framework that leverages both image-based and geometric priors to learn per-Gaussian feature offsets within the UV space. 
+          This UV representation supports dynamic resampling, ensuring full compatibility with Adaptive Density Control (ADC) and enhanced adaptability to shape and textural variations. 
+          (2) a Temporal ADC strategy, which first clusters structurally similar frames to facilitate more targeted computation of the densification criterion. 
+          It further introduces a novel fused perceptual error as clone criterion to jointly capture geometric and textural discrepancies, 
+          encouraging densification in regions requiring finer details. 
+          Extensive experiments on four benchmark datasets demonstrate that STAvatar achieves state-of-the-art reconstruction performance, 
+          especially in capturing fine-grained details and reconstructing frequently occluded regions. The code will be publicly available.
+        </p>
+      </div>
+    </div>
+  </div>
+  </div>
+</section>
+
+<!-- Method -->
+<section class="hero is-small">
+  <div class="hero-body">
+    <div class="container is-max-desktop">
+      <h3 class="title is-3">Method</h3>
+
+      <div style="display: flex; justify-content: center; align-items: center; margin-bottom: 1.2em;">
+        <img src="static/images/method.png" alt="MY ALT TEXT" style="width: 100%; height: 100%;"/>
+      </div>
+
+      <div class="item">
+        <div class="content has-text-justified" style="font-size: 1em;">
+          <p>
+            Overview of STAvatar. (a) In addition to a fixed identity reference image and its UV position map, 
+            we further rasterize the vertex offsets between reference mesh and control mesh to obtain a UV displacement map as input. 
+            (b) We construct a dual-branch network to predict a feature offset map in UV space, from which an offset 
+            \( \delta_i \) is sampled for each Gaussian \( g_i \). 
+            This offset is added to the coarsely estimated parameters \( \tilde{\theta} \) to get final parameters 
+            \( \theta^* \). The final images are then rendered using Gaussian Splatting. 
+            (c) We first construct a perceptual error map by combining 
+            \( \mathcal{L}_1 \) map and 
+            \( \mathcal{L}_{\mathrm{d-ssim}} \) map. 
+            Then, we estimate the 2D projection of each Gaussian \( g_i \) using the recorded attributes, 
+            based on which the fused perceptual error is computed.
+          </p>
+        </div>
+      </div>
+      
+      <div style="display: flex; justify-content: center; align-items: center; margin-top: 2em; margin-bottom: 1.2em;">
+        <img src="static\images\ftc.png" alt="Additional Method Diagram" style="width: 60%; height: auto;"/>
+      </div>
+
+      <div class="content has-text-justified" style="font-size: 1em;">
+        <p>
+          FLAME-Conditioned Temporal Clustering. We cluster video frames into K clusters and conduct ADC within each cluster's training.
+        </p>
+      </div>
+
+    </div>
+  </div>
+</section>
+<!-- End Method -->
+
+<!-- MathJax -->
+<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js" integrity="sha512-3/rXl/YdQ7tFzqB1p7F2B2R6j0GQURHzR2qS9aZXxJ2pF1+3O8i2/NQ2vJ2V9Zl2TIGvZ4W9r5bZxVvPCi7W8A==" crossorigin="anonymous" referrerpolicy="no-referrer"></script> -->
+
+
+<!-- Paper abstract -->
+<section class="hero is-small">
+  <div class="hero-body">
+    <div class="container is-max-desktop">
+      <h3 class="title is-3">Qualitative Results</h3>
+
+      <div style="display: flex; justify-content: center; align-items: center; margin-bottom: 1.2em;">
+        <img src="static\images\recon.png" alt="MY ALT TEXT" style="width: 100%; height: auto;"/>
+      </div>
+
+      <div class="content has-text-justified">
+        <p style="font-size: 1.0em;">
+          Qualitative results of head avatar reconstruction. Our method recovers finer details and delicate structures such as wrinkles and teeth. 
+          Moreover, it produces clearer results in challenging regions like mouth interiors and eyelids.
+        </p>
+      </div>
+
+      <div style="display: flex; justify-content: center; align-items: center; margin-bottom: 1.2em;">
+        <img src="static\images\cross.png" alt="MY ALT TEXT" style="width: 100%; height: auto;"/>
+      </div>
+
+      <div class="content has-text-justified">
+        <p style="font-size: 1.0em;">
+          Qualitative results of cross-identity reenactment. Our method accurately animates the source avatar performing expressions such as smiling and eye-closing.
+        </p>
+      </div>
+
+    </div>
+  </div>
+  </div>
+</section>
+
+<section class="hero is-small">
+  <div class="hero-body">
+    <div class="container is-max-desktop">
+      <h3 class="title is-3">Quantitative Results</h3>
+
+      <div style="display: flex; justify-content: center; align-items: center; margin-bottom: 1.2em;">
+        <img src="static\images\table1.png" alt="MY ALT TEXT" style="width: 100%; height: 100%;"/>
+      </div>
+
+      <div class="content has-text-justified">
+        <p style="font-size: 1.0em;">
+          As shown in Table 1, our method consistently outperforms existing state-of-the-art approaches across most datasets and metrics, 
+          achieving notable improvements in reconstruction quality. In particular, our method attains the highest SSIM scores and the lowest LPIPS values on all four datasets, 
+          demonstrating its strong ability to preserve both geometric accuracy and perceptual fidelity.
+        </p>
+      </div>
+
+    </div>
+</section>
+
+<!--BibTex citation -->
+<!-- <section class="section" id="BibTeX">
+  <div class="container is-max-desktop content">
+    <h2 class="title">BibTeX</h2>
+    <pre><code>@misc{wang2025pctalk,
+    title={PC-Talk: Precise Facial Animation Control for Audio-Driven Talking Face Generation},
+    author={Baiqin Wang and Xiangyu Zhu and Fan Shen and Hao Xu and Zhen Lei},
+    year={2025},
+    eprint={2503.14295},
+    archivePrefix={arXiv},
+    primaryClass={cs.CV}
+    }</code></pre>
+  </div>
+</section> -->
+<!--End BibTex citation -->
+
+<footer class="footer">
+  <div class="container">
+    <div class="columns is-centered">
+      <div class="column is-8">
+        <div class="content">
+
+          <p>
+            This page was built using the <a href="https://github.com/eliahuhorwitz/Academic-project-page-template" target="_blank">Academic Project Page Template</a>.
+          </p>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- Statcounter tracking code -->
+
+<!-- You can add a tracker to track page visits by creating an account at statcounter.com -->
+
+<!-- End of Statcounter Code -->
+
+</body>
+</html>
