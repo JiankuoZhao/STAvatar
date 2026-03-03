@@ -1,0 +1,145 @@
+#
+# Copyright (C) 2023, Inria
+# GRAPHDECO research group, https://team.inria.fr/graphdeco
+# All rights reserved.
+#
+# This software is free for non-commercial, research and evaluation use
+# under the terms of the LICENSE.md file.
+#
+# For inquiries contact  george.drettakis@inria.fr
+#
+
+import torch
+from torch.utils.data import DataLoader
+from scene import Scene
+import os
+from tqdm import tqdm
+from os import makedirs
+import concurrent.futures
+import multiprocessing
+from pathlib import Path
+from tqdm import tqdm
+from PIL import Image
+import numpy as np
+from gaussian_renderer import render
+from utils.general_utils import safe_state
+from argparse import ArgumentParser
+from arguments import ModelParams, PipelineParams, get_combined_args
+from gaussian_renderer import FlameGaussianModel
+from networks.dual_branch import DualBranchUNet
+
+def write_data(path2data):
+    for path, data in path2data.items():
+        if not path.parent.exists():
+            path.parent.mkdir(parents=True, exist_ok=True)
+        if path.suffix in [".png", ".jpg"]:
+            data = data.mul(255).add_(0.5).clamp_(0, 255).permute(1, 2, 0).to("cpu", torch.uint8).numpy()
+            Image.fromarray(data).save(path)
+        elif path.suffix in [".obj"]:
+            with open(path, "w") as f:
+                f.write(data)
+        elif path.suffix in [".txt"]:
+            with open(path, "w") as f:
+                f.write(data)
+        elif path.suffix in [".npz"]:
+            np.savez(path, **data)
+        else:
+            raise NotImplementedError(f"Unknown file type: {path.suffix}")
+
+def render_set(dataset : ModelParams, name, iteration, views, gaussians, pipeline, background, dual_branch_net, output_video=False):
+    if dataset.select_camera_id != -1:
+        name = f"{name}_{dataset.select_camera_id}"
+    iter_path = Path(dataset.model_path) / name / f"ours_{iteration}"
+    render_path = iter_path / "renders"
+    gts_path = iter_path / "gt"
+
+    makedirs(render_path, exist_ok=True)
+    makedirs(gts_path, exist_ok=True)
+
+    gaussians.select_mesh_by_timestep(0)
+    gaussians.get_position_map()
+
+    views_loader = DataLoader(views, batch_size=None, shuffle=False, num_workers=8)
+    max_threads = multiprocessing.cpu_count()
+    print('Max threads: ', max_threads)
+    worker_args = []
+    for idx, view in enumerate(tqdm(views_loader, desc="Rendering progress")):
+        gaussians.select_mesh_by_timestep(view.timestep)
+        displacement_map = gaussians.get_vertex_displace_map()
+        offset = dual_branch_net._decode(gaussians.flame_param, view.timestep, displacement_map)
+        render_pkg = render(view,gaussians,pipeline,background,offset=offset)
+        rendering = torch.clamp(render_pkg["render"], 0.0, 1.0)
+        gt = view.original_image[0:3, :, :]
+
+        path2data = {}
+        path2data[Path(render_path) / f'{idx:05d}.png'] = rendering
+        path2data[Path(gts_path) / f'{idx:05d}.png'] = gt
+        worker_args.append([path2data])
+
+        if len(worker_args) == max_threads or idx == len(views_loader)-1:
+            with concurrent.futures.ThreadPoolExecutor(max_threads) as executor:
+                futures = [executor.submit(write_data, *args) for args in worker_args]
+                concurrent.futures.wait(futures)
+            worker_args = []
+
+    if output_video:
+        try:
+            os.system(f"ffmpeg -y -framerate 25 -f image2 -pattern_type glob -i '{render_path}/*.png' -pix_fmt yuv420p {iter_path}/renders.mp4")
+            os.system(f"ffmpeg -y -framerate 25 -f image2 -pattern_type glob -i '{gts_path}/*.png' -pix_fmt yuv420p {iter_path}/gt.mp4")
+        except Exception as e:
+            print(e)
+
+def render_sets(dataset : ModelParams, iteration : int, pipeline : PipelineParams, skip_train : bool, skip_val : bool, skip_test : bool, cuda_id: str, output_video=False):
+    with torch.no_grad():
+        gaussians = FlameGaussianModel(dataset.sh_degree, dataset.disable_flame_static_offset)
+        scene = Scene(dataset, gaussians, load_iteration=iteration, shuffle=False)
+        iteration = str(scene.loaded_iter)
+        
+        # Initialize the network (DualBranchUNet)
+        uv_coords_path = os.path.join(dataset.model_path, f'param/iteration_{iteration}/uv_coords.pt')
+        uv_coords = torch.load(uv_coords_path, map_location='cuda')
+        
+        uv_mask = gaussians.get_uv_mask()
+        dual_branch_net = DualBranchUNet(uv_mask=uv_mask,device='cuda',uv_sample_coords=uv_coords)
+        model_path = os.path.join(dataset.model_path, f'param/iteration_{iteration}/dual_branch.pth')
+        dual_branch_net.load_state_dict(torch.load(model_path, map_location='cuda'))
+        dual_branch_net.to('cuda')
+        dual_branch_net.eval()
+        dual_branch_net.forward_once()
+
+        bg_color = [1,1,1] if dataset.white_background else [0, 0, 0]
+        background = torch.tensor(bg_color, dtype=torch.float32, device=cuda_id)
+
+        if dataset.target_path != "": 
+            name = os.path.basename(os.path.normpath(dataset.target_path))
+            # when loading from a target path, test cameras are merged into the train cameras
+            render_set(dataset, f'{name}', scene.loaded_iter, scene.getTrainCameras(), gaussians, pipeline, background, dual_branch_net, output_video)
+        else:
+            if not skip_train:
+                render_set(dataset, "train", scene.loaded_iter, scene.getTrainCameras(), gaussians, pipeline, background, dual_branch_net, output_video)
+            
+            if not skip_val:
+                render_set(dataset, "val", scene.loaded_iter, scene.getValCameras(), gaussians, pipeline, background, dual_branch_net, output_video)
+
+            if not skip_test:
+                render_set(dataset, "test", scene.loaded_iter, scene.getTestCameras(), gaussians, pipeline, background, dual_branch_net, output_video)
+
+if __name__ == "__main__":
+    parser = ArgumentParser(description="Testing script parameters")
+    model = ModelParams(parser, sentinel=True)
+    pipeline = PipelineParams(parser)
+    parser.add_argument("--iteration", default=-1, type=int)
+    parser.add_argument("--skip_train", action="store_true")
+    parser.add_argument("--skip_val", action="store_true")
+    parser.add_argument("--skip_test", action="store_true")
+    parser.add_argument("--quiet", action="store_true")
+    parser.add_argument("--output_video", action="store_true")
+    parser.add_argument("--cuda", default="cuda:0")
+    args = get_combined_args(parser)
+    print("Rendering " + args.model_path)
+
+    # Initialize system state (RNG)
+    safe_state(args.quiet)
+    torch.cuda.set_device(args.cuda)
+
+    render_sets(model.extract(args), args.iteration, pipeline.extract(args), args.skip_train, args.skip_val, args.skip_test, args.cuda, args.output_video)
