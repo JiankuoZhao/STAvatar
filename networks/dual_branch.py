@@ -127,16 +127,6 @@ class DualBranchUNet(nn.Module):
     def forward(
         self, flame_param, timestep, displacement_map
     ):
-        """
-        Args:
-            x: image, shape [B, 3, 256, 256]
-            uv_map: UV position map, shape [B, 3, 256, 256]
-            condition: flame param, shape [B, 112]
-        Returns:
-            offset_out: GS offset, shape [B, 13, 512, 512]
-            dynamic_out: dynamic GS attributes, shape [B, gs_num, 14]
-        """
-
         # process condition
         expr = flame_param["expr"][timestep].unsqueeze(0)  # 1*100
         neck_pose = flame_param["neck_pose"][timestep].unsqueeze(0)  # 1*3
