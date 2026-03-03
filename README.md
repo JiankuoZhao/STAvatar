@@ -105,7 +105,7 @@ If you find our paper or code useful in your research, please cite with the foll
 }
 ```
 
-### 🤝 Acknowledgements
+## 🤝 Acknowledgements
 This implementation is built upon several excellent open-source projects. We would like to express our gratitude to the authors for their pioneering work:
 
 * [Gaussian Splatting](https://github.com/graphdeco-inria/gaussian-splatting.git)
