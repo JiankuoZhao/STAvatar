@@ -50,9 +50,6 @@ pip install -r requirements.txt
 pip install submodules/diff-gaussian-rasterization
 pip install submodules/simple-knn
 pip install submodules/fused-ssim
-
-# git submodule add https://github.com/camenduru/simple-knn.git submodules/simple-knn
-# git submodule add https://github.com/rahul-goel/fused-ssim.git submodules/fused-ssim
 ``` 
 
 ### Weights Preparation

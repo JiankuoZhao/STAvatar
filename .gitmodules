@@ -1,0 +1,6 @@
+[submodule "submodules/simple-knn"]
+	path = submodules/simple-knn
+	url = https://github.com/camenduru/simple-knn.git
+[submodule "submodules/fused-ssim"]
+	path = submodules/fused-ssim
+	url = https://github.com/rahul-goel/fused-ssim.git
