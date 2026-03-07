@@ -61,6 +61,7 @@ To facilitate a quick start, we provide trained models and processed data for th
 - **Obama**: From the [INSTA dataset](https://github.com/Zielon/INSTA).
 
 All resources are available for download via [Google Drive](https://drive.google.com/drive/folders/1gypuUi1TsWm6Gm6vdyf6S-fwlYnEkg1r?usp=sharing).
+> **Data Split Strategy**: For consistency across these identities, the **final 450 frames** of each sequence are reserved for testing/evaluation, while the remaining frames are utilized for training.
 
 
 ### Process your custom dataset
