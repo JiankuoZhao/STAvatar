@@ -129,24 +129,11 @@ def compute_face_orientation(verts, faces, return_scale=False):
 
     orientation = torch.cat([a0[..., None], a1[..., None], a2[..., None]], dim=-1)
 
-    # Compute vertex normals by averaging face normals
-    # vert_normals = torch.zeros_like(verts)
-    # vert_normals.index_add_(
-    #     -2, i0, a1
-    # )
-    # vert_normals.index_add_(
-    #     -2, i1, a1
-    # )
-    # vert_normals.index_add_(
-    #     -2, i2, a1
-    # )
-    # vert_normals = safe_normalize(vert_normals).unsqueeze(0)
-
     if return_scale:
         s0 = length(v1 - v0)
         s1 = dot(a2, (v2 - v0)).abs()
         scale = (s0 + s1) / 2
-    return orientation, scale, a1
+    return orientation, scale
 
 def compute_vertex_normals(verts, faces):
     i0 = faces[..., 0].long()
